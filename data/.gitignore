@@ -1,0 +1,4 @@
+.venv
+samples_*.json
+samples-data_*.json
+retrieve_data_*.log
