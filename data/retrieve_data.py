@@ -1,6 +1,7 @@
 import argparse
 import json
 import logging
+import os
 import sys
 import time
 from datetime import datetime
@@ -15,7 +16,8 @@ logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)-15s | %(levelname)-8s %(module)s | %(message)s',
     handlers=[
-        logging.FileHandler(filename=f'retrieve_data_{DATA_STAMP}.log'),
+        logging.FileHandler(
+            filename=f'{os.path.basename(__file__).replace(".py","")}_{DATA_STAMP}.log'),
         logging.StreamHandler(sys.stdout)
     ]
 )
