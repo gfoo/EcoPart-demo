@@ -69,3 +69,5 @@ $ docker exec -ti ecopart-backend alembic upgrade head
 # populate base
 $ docker exec -ti ecopart-backend python initial_data.py -d /data/samples-data.json
 ```
+
+-> http://localhost:8000/docs

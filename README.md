@@ -1,11 +1,18 @@
-# EcoPart-demo
+# EcoPart demo (full stack software)
 
-Web app demo of [EcoPart project](https://ecopart.obs-vlfr.fr/) using:
+Web app demo using [EcoPart project data](https://ecopart.obs-vlfr.fr/):
 
-- React as frontend
-- FastAPI/PostgreSQL as backend
-- Docker compose for deploy
+Backend/Frontend:
 
-This tool use dumped data extracted from the project, more informations in this [README](data/README.md).
+- React as frontend : [README](frontend/README.md)
+- FastAPI/PostgreSQL as backend : [README](backend/README.md)
 
-Picheral M, Colin S, Irisson J-O (2017). EcoTaxa, a tool for the taxonomic classification of images. http://ecotaxa.obs-vlfr.fr
+Deploy:
+
+- Docker/Compose for deploy : [README](deploy/README.md)
+
+Data:
+
+- Tool used to dump data from the project: [README](data/README.md)
+
+  Picheral M, Colin S, Irisson J-O (2017). EcoTaxa, a tool for the taxonomic classification of images. http://ecotaxa.obs-vlfr.fr
