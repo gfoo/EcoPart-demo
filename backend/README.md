@@ -34,16 +34,38 @@ $ uvicorn main:app --reload
 
 Doc : http://localhost:8000/docs
 
-## Helpfull commands
+## Initialize base and data
 
-```
-# import all EcoPArt data into an empty base
-$ python initial_data.py -d ../data/samples-data.json
+(Data are prepared from [here](../data/README.md))
 
+```shell
 # re-init db
 $ psql -U postgres -h localhost -c "drop database ecopart_demo"
 $ psql -U postgres -h localhost -c "create database ecopart_demo"
 
-# generate new mapping according to last models
+# import all EcoPArt data into an empty base
+$ python initial_data.py -d ../data/samples-data.json
+
+# generate new mapping according to last models (if you change that)
 $ alembic revision --autogenerate -m "bla bla"
+```
+
+## Build and run docker image
+
+```shell
+# build
+$ docker build -t ecopart-backend .
+
+# launch
+$ docker run --rm -v ${PWD}/../data:/data -d --name ecopart-backend \
+    --network=host \
+    -e PROJECT_NAME="ecopart_api_demo" \
+    -e SQLALCHEMY_DATABASE_URI="postgresql://postgres:postgres@localhost:5432/ecopart_demo" \
+    ecopart-backend
+
+# init base
+$ docker exec -ti ecopart-backend alembic upgrade head
+
+# populate base
+$ docker exec -ti ecopart-backend python initial_data.py -d /data/samples-data.json
 ```
