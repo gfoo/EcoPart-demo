@@ -1,4 +1,3 @@
 .venv
-samples_*.json
-samples-data_*.json
+samples*.json
 retrieve_data_*.log
