@@ -1,35 +1,53 @@
-import { Alert, CircularProgress, Container } from "@mui/material";
+import { LayersControl, MapContainer, TileLayer } from "react-leaflet";
 import { useSelector } from "react-redux";
-import { FETCH_STATUS_FAILED, FETCH_STATUS_LOADING } from "../store/helpers";
-import {
-  fetchSamplesError,
-  fetchSamplesStatus,
-  selectAllSamples,
-} from "../store/samplesSlice";
+import { selectViewTrack } from "../store/mapFilteringSlice";
+import { selectSelectedProjects } from "../store/projectsSlice";
+import MapControls from "./MapControls";
+import SamplesMarkers from "./SamplesMarkers";
+
+const DEFAULT_CENTER = [43.3395, 7.6464];
+const DEFAULT_ZOOM = 6;
 
 const Map = () => {
-  const samples = useSelector(selectAllSamples);
-  const status = useSelector(fetchSamplesStatus);
-  const error = useSelector(fetchSamplesError);
+  const selectedProjects = useSelector(selectSelectedProjects);
+  const viewTrack = useSelector(selectViewTrack);
 
   return (
-    <>
-      {samples.length > 0 && (
-        <Container
-          sx={{
-            marginTop: "20px",
-            marginLeft: "10px",
-            height: "30px",
-          }}
-        >
-          Fetched {samples.length} samples from selected projects{"  "}
-          {status === FETCH_STATUS_LOADING && <CircularProgress size={20} />}
-        </Container>
-      )}
-      {status === FETCH_STATUS_FAILED && (
-        <Alert severity="error">{error}</Alert>
-      )}
-    </>
+    <MapContainer
+      style={{
+        width: "100%",
+        height: "750px",
+      }}
+      center={DEFAULT_CENTER}
+      zoom={DEFAULT_ZOOM}
+    >
+      <MapControls />
+      <LayersControl position="topright">
+        <LayersControl.BaseLayer checked name="OpenStreetMap">
+          <TileLayer
+            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+          />
+        </LayersControl.BaseLayer>
+        <LayersControl.BaseLayer name="Esri_WorldImagery">
+          <TileLayer
+            attribution="Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community"
+            url="http://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
+          />
+        </LayersControl.BaseLayer>
+        {selectedProjects.map((project) => {
+          return (
+            <LayersControl.Overlay
+              key={project.id}
+              checked
+              name={`Project ${project.name} (${project.id})`}
+            >
+              <SamplesMarkers project={project} viewTrack={viewTrack} />
+            </LayersControl.Overlay>
+          );
+        })}
+      </LayersControl>
+    </MapContainer>
   );
 };
 

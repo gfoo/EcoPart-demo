@@ -14,16 +14,17 @@ import {
 } from "../store/helpers";
 import {
   fetchProjects,
-  fetchProjectsError,
-  fetchProjectsStatus,
-  selectAllProjects,
+  selectedProjects,
+  selectFetchProjectsError,
+  selectFetchProjectsStatus,
+  selectProjects,
 } from "../store/projectsSlice";
 import { fetchSamples } from "../store/samplesSlice";
 
 const ProjectsSelector = () => {
-  const projects = useSelector(selectAllProjects);
-  const status = useSelector(fetchProjectsStatus);
-  const error = useSelector(fetchProjectsError);
+  const projects = useSelector(selectProjects);
+  const status = useSelector(selectFetchProjectsStatus);
+  const error = useSelector(selectFetchProjectsError);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -32,15 +33,11 @@ const ProjectsSelector = () => {
     }
   }, [status, dispatch]);
 
-  const defaultProps = {
-    options: projects,
-    getOptionLabel: (p) => `${p.name} (${p.id})`,
-  };
-
   return (
     <Autocomplete
       multiple
-      {...defaultProps}
+      options={projects}
+      getOptionLabel={(p) => `${p.name} (${p.id})`}
       sx={{
         width: 700,
       }}
@@ -69,7 +66,9 @@ const ProjectsSelector = () => {
         </>
       )}
       onChange={(event, newValue) => {
-        dispatch(fetchSamples(newValue.map((p) => p.id)));
+        const projectIds = newValue.map((p) => p.id);
+        dispatch(selectedProjects({ projectIds }));
+        dispatch(fetchSamples(projectIds));
       }}
     />
   );

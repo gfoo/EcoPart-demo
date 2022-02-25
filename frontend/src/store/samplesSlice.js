@@ -26,7 +26,24 @@ const samplesSlice = createSlice({
     builder
       .addCase(fetchSamples.fulfilled, (state, action) => {
         state.status = FETCH_STATUS_SUCCESSED;
-        state.samples = action.payload;
+        const groupedByProj = action.payload.reduce((res, sample) => {
+          const projId = sample.project_id;
+          if (!(projId in res)) {
+            res[projId] = [];
+          }
+          res[projId].push(sample);
+          return res;
+        }, {});
+        const projSamplesIndexed = Object.values(groupedByProj).map(
+          (projSamples) =>
+            projSamples
+              .sort((s1, s2) => s1.datetime >= s2.datetime)
+              .map((s, index) => ({
+                ...s,
+                index_: index + 1,
+              }))
+        );
+        state.samples = projSamplesIndexed.flat();
       })
       .addCase(fetchSamples.pending, (state, action) => {
         state.status = FETCH_STATUS_LOADING;
@@ -40,6 +57,8 @@ const samplesSlice = createSlice({
 
 export default samplesSlice.reducer;
 
-export const selectAllSamples = (state) => state.samples.samples;
-export const fetchSamplesStatus = (state) => state.samples.status;
-export const fetchSamplesError = (state) => state.samples.error;
+export const selectSamples = (state) => state.samples.samples;
+export const selectSamplesByProjectId = (state, projectId) =>
+  state.samples.samples.filter((s) => s.project_id === projectId);
+export const selectFetchSamplesStatus = (state) => state.samples.status;
+export const selectFetchSamplesError = (state) => state.samples.error;

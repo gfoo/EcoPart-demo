@@ -15,6 +15,11 @@ export const fetchSamplesOfProjectId = async (projectId) => {
   const response = await BACKEND_API_CLIENT.get(
     `/ecopart_projects/${projectId}/samples`
   );
+  return response.data.map((s) => ({ ...s, project_id: projectId }));
+};
+
+export const fetchSample = async (sampleId) => {
+  const response = await BACKEND_API_CLIENT.get(`/samples/${sampleId}`);
   return response.data;
 };
 
