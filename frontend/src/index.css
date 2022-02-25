@@ -3,8 +3,6 @@
 @import "@fontsource/roboto/500.css";
 @import "@fontsource/roboto/700.css";
 
-@import "~leaflet/dist/leaflet.css";
-
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",

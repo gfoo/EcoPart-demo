@@ -1,4 +1,6 @@
+import "leaflet/dist/leaflet.css";
 import { LayersControl, MapContainer, TileLayer } from "react-leaflet";
+import Fullscreen from "react-leaflet-fullscreen-plugin";
 import { useSelector } from "react-redux";
 import { selectViewTrack } from "../store/mapFilteringSlice";
 import { selectSelectedProjects } from "../store/projectsSlice";
@@ -47,6 +49,7 @@ const Map = () => {
           );
         })}
       </LayersControl>
+      <Fullscreen />
     </MapContainer>
   );
 };
