@@ -1,11 +1,6 @@
 import { Fragment } from "react";
-import {
-  CircleMarker,
-  FeatureGroup,
-  Polyline,
-  Popup,
-  Tooltip,
-} from "react-leaflet";
+import { CircleMarker, FeatureGroup, Popup, Tooltip } from "react-leaflet";
+import TextPath from "react-leaflet-textpath";
 import { useSelector } from "react-redux";
 import { selectSamplesByProjectId } from "../store/samplesSlice";
 import SampleView from "./SampleView";
@@ -27,13 +22,19 @@ const SamplesMarkers = ({ project, viewTrack = false }) => {
                 </Popup>
               </CircleMarker>
               {viewTrack && index > 0 && (
-                <Polyline
+                <TextPath
+                  text="    ►    "
+                  orientation={180}
+                  center={true}
+                  opacity={0.5}
+                  attributes={{ fill: "#3388ff" }}
+                  repeat={true}
                   positions={[samplesSorted[index - 1], samplesSorted[index]]}
                 >
                   <Tooltip direction="center" permanent={true} opacity={0.5}>
                     {s.index_}
                   </Tooltip>
-                </Polyline>
+                </TextPath>
               )}
             </Fragment>
           );
