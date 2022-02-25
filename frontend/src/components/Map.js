@@ -2,7 +2,6 @@ import "leaflet/dist/leaflet.css";
 import { LayersControl, MapContainer, TileLayer } from "react-leaflet";
 import Fullscreen from "react-leaflet-fullscreen-plugin";
 import { useSelector } from "react-redux";
-import { selectViewTrack } from "../store/mapFilteringSlice";
 import { selectSelectedProjects } from "../store/projectsSlice";
 import MapControls from "./MapControls";
 import SamplesMarkers from "./SamplesMarkers";
@@ -12,7 +11,6 @@ const DEFAULT_ZOOM = 6;
 
 const Map = () => {
   const selectedProjects = useSelector(selectSelectedProjects);
-  const viewTrack = useSelector(selectViewTrack);
 
   return (
     <MapContainer
@@ -44,7 +42,7 @@ const Map = () => {
               checked
               name={`Project ${project.name} (${project.id})`}
             >
-              <SamplesMarkers project={project} viewTrack={viewTrack} />
+              <SamplesMarkers project={project} />
             </LayersControl.Overlay>
           );
         })}

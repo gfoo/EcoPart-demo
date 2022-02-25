@@ -2,9 +2,15 @@ import {
   Alert,
   Checkbox,
   CircularProgress,
+  FormControl,
   FormControlLabel,
   Grid,
+  InputLabel,
+  MenuItem,
+  Select,
+  Slider,
 } from "@mui/material";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   FETCH_STATUS_FAILED,
@@ -14,10 +20,15 @@ import {
 } from "../store/helpers";
 import {
   autofitBoundsEnable,
+  highlighIndex,
   selectAutofitBounds,
+  selectHighlightedIndex,
+  selectTrackedProject,
   selectViewTrack,
+  trackProject,
   viewTrackEnable,
 } from "../store/mapFilteringSlice";
+import { selectSelectedProjects } from "../store/projectsSlice";
 import {
   selectFetchSamplesError,
   selectFetchSamplesStatus,
@@ -25,15 +36,46 @@ import {
 } from "../store/samplesSlice";
 
 const MapHeader = () => {
+  const dispatch = useDispatch();
   const samples = useSelector(selectSamples);
   const status = useSelector(selectFetchSamplesStatus);
   const error = useSelector(selectFetchSamplesError);
-  const dispatch = useDispatch();
   const autofitBounds = useSelector(selectAutofitBounds);
   const viewTrack = useSelector(selectViewTrack);
+  const selectedProjects = useSelector(selectSelectedProjects);
+  const trackedProject = useSelector(selectTrackedProject);
+  const [trackedProjectMaxIndex, setTrackedProjectMaxIndex] = useState(1);
+  const highlightedIndex = useSelector(selectHighlightedIndex);
+
+  useEffect(() => {
+    dispatch(highlighIndex(0));
+    if (trackedProject && samples.length > 0) {
+      setTrackedProjectMaxIndex(
+        Math.max(
+          ...samples
+            .filter((s) => s.project_id === trackedProject.id)
+            .map((s) => s.index_)
+        )
+      );
+    } else {
+      setTrackedProjectMaxIndex(1);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [trackedProject, samples]);
+
+  useEffect(() => {
+    if (
+      selectedProjects.length <= 0 ||
+      (trackedProject &&
+        !selectedProjects.find((p) => p.id === trackedProject.id))
+    ) {
+      dispatch(trackProject(null));
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedProjects]);
 
   return (
-    <Grid container>
+    <Grid container spacing={2}>
       <Grid item xs={2}>
         {(status === FETCH_STATUS_IDLE ||
           (samples.length <= 0 && status !== FETCH_STATUS_LOADING)) && (
@@ -60,17 +102,68 @@ const MapHeader = () => {
           label="Auto fit samples bounds"
         />
       </Grid>
-      <Grid item xs={2}>
-        <FormControlLabel
-          control={
-            <Checkbox
-              size="small"
-              checked={viewTrack}
-              onChange={(e) => dispatch(viewTrackEnable(e.target.checked))}
-            />
-          }
-          label="View track"
-        />
+      <Grid container spacing={2}>
+        <Grid item xs={4}>
+          <FormControl fullWidth>
+            <InputLabel id="demo-simple-select-label">
+              Project to track
+            </InputLabel>
+            <Select
+              labelId="demo-simple-select-label"
+              id="demo-simple-select"
+              value={trackedProject}
+              label="Project to track"
+              onChange={(e) => dispatch(trackProject(e.target.value))}
+            >
+              {selectedProjects.length > 0 && (
+                <MenuItem key={-1} value={null}>
+                  {"No project"}
+                </MenuItem>
+              )}
+              {selectedProjects.map((p) => {
+                return (
+                  <MenuItem key={p.id} value={p}>
+                    {p.name} ({p.id})
+                  </MenuItem>
+                );
+              })}
+            </Select>
+          </FormControl>
+        </Grid>
+        <Grid item xs={4}>
+          <Slider
+            size="small"
+            disabled={trackedProject === null}
+            defaultValue={1}
+            value={highlightedIndex}
+            min={1}
+            max={trackedProjectMaxIndex}
+            valueLabelDisplay="auto"
+            marks={[
+              {
+                value: 1,
+                label: "1",
+              },
+              {
+                value: trackedProjectMaxIndex,
+                label: `${trackedProjectMaxIndex}`,
+              },
+            ]}
+            onChange={(e, v) => dispatch(highlighIndex(v))}
+          ></Slider>
+        </Grid>
+        <Grid item xs={2}>
+          <FormControlLabel
+            control={
+              <Checkbox
+                size="small"
+                checked={viewTrack}
+                onChange={(e) => dispatch(viewTrackEnable(e.target.checked))}
+              />
+            }
+            label="View track"
+          />
+        </Grid>
       </Grid>
       <Grid item xs={12}>
         {status === FETCH_STATUS_FAILED && (

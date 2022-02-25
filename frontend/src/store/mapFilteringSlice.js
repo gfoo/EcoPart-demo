@@ -4,6 +4,8 @@ const initialState = {
   autofitBounds: true,
   viewTrack: false,
   viewTrackIndexes: false,
+  highlightedIndex: 0,
+  trackedProject: null,
 };
 
 const mapFilteringSlice = createSlice({
@@ -16,13 +18,27 @@ const mapFilteringSlice = createSlice({
     viewTrackEnable(state, action) {
       state.viewTrack = action.payload;
     },
+    highlighIndex(state, action) {
+      state.highlightedIndex = action.payload;
+    },
+    trackProject(state, action) {
+      state.trackedProject = action.payload;
+    },
   },
 });
 
-export const { autofitBoundsEnable, viewTrackEnable } =
-  mapFilteringSlice.actions;
+export const {
+  autofitBoundsEnable,
+  viewTrackEnable,
+  highlighIndex,
+  trackProject,
+} = mapFilteringSlice.actions;
 
 export default mapFilteringSlice.reducer;
 
 export const selectAutofitBounds = (state) => state.mapFiltering.autofitBounds;
 export const selectViewTrack = (state) => state.mapFiltering.viewTrack;
+export const selectHighlightedIndex = (state) =>
+  state.mapFiltering.highlightedIndex;
+export const selectTrackedProject = (state) =>
+  state.mapFiltering.trackedProject;

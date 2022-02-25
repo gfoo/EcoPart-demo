@@ -46,7 +46,10 @@ const ProjectsSelector = () => {
       renderInput={(params) => (
         <>
           <Box sx={{ position: "relative" }}>
-            <TextField {...params} label="EcoPart project name" />
+            <TextField
+              {...params}
+              label="EcoPart project names (multiple selection)"
+            />
             {status === FETCH_STATUS_LOADING && (
               <CircularProgress
                 size={24}
