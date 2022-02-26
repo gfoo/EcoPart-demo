@@ -17,4 +17,4 @@ jobs:
           heroku_email: "gilles.faucherand@gmail.com"
           appdir: "backend"
           usedocker: "true"
-          docker_heroku_process_type: "worker"
+          docker_heroku_process_type: "web"
