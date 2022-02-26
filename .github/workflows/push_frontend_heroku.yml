@@ -1,0 +1,23 @@
+name: push_frontend_heroku
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: akhileshns/heroku-deploy@v3.12.12
+        with:
+          heroku_api_key: ${{secrets.HEROKU_API_KEY}}
+          heroku_app_name: "ecopart-demo"
+          heroku_email: "gilles.faucherand@gmail.com"
+          appdir: "frontend"
+          usedocker: "true"
+          docker_build_args: "REACT_APP_BACKEND_API_URL"
+        env:
+          REACT_APP_BACKEND_API_URL: "http://ecopart-demo..herokuapp.com/api"
+          
