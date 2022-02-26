@@ -1,6 +1,6 @@
 # EcoPart demo (full stack software)
 
-Web app demo using EcoPart project data: [online demo](https://ecopart-demo-gfoo.herokuapp.com/) 
+Web app demo using EcoPart project data: [online demo](https://ecopart-demo-frontend.herokuapp.com/) 
 
 Backend/Frontend:
 
