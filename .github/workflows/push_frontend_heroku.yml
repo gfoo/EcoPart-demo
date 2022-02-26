@@ -20,5 +20,4 @@ jobs:
           docker_build_args: "REACT_APP_BACKEND_API_URL"
           docker_heroku_process_type: "web"
         env:
-          REACT_APP_BACKEND_API_URL: "http://ecopart-demo-backend.herokuapp.com"
-          
+          REACT_APP_BACKEND_API_URL: "https://ecopart-demo-backend.herokuapp.com"
