@@ -61,6 +61,7 @@ $ docker run --rm -v ${PWD}/../data:/data -d --name ecopart-backend \
     --network=host \
     -e PROJECT_NAME="ecopart_api_demo" \
     -e SQLALCHEMY_DATABASE_URI="postgresql://postgres:postgres@localhost:5432/ecopart_demo" \
+    -e BACKEND_CORS_ORIGINS='["http://localhost:3000"]' \
     ecopart-backend
 
 # init base
