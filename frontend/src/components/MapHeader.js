@@ -35,6 +35,8 @@ import {
   selectSamples,
 } from "../store/samplesSlice";
 
+const NoProject = " ";
+
 const MapHeader = () => {
   const dispatch = useDispatch();
   const samples = useSelector(selectSamples);
@@ -44,21 +46,21 @@ const MapHeader = () => {
   const viewTrack = useSelector(selectViewTrack);
   const selectedProjects = useSelector(selectSelectedProjects);
   const trackedProject = useSelector(selectTrackedProject);
+  const [trackedProjectSamples, setTrackedProjectSamples] = useState([]);
   const [trackedProjectMaxIndex, setTrackedProjectMaxIndex] = useState(1);
   const highlightedIndex = useSelector(selectHighlightedIndex);
 
   useEffect(() => {
     dispatch(highlighIndex(0));
     if (trackedProject && samples.length > 0) {
-      setTrackedProjectMaxIndex(
-        Math.max(
-          ...samples
-            .filter((s) => s.project_id === trackedProject.id)
-            .map((s) => s.index_)
-        )
+      const pSamples = samples.filter(
+        (s) => s.project_id === trackedProject.id
       );
+      setTrackedProjectSamples(pSamples);
+      setTrackedProjectMaxIndex(Math.max(...pSamples.map((s) => s.index_)));
     } else {
       setTrackedProjectMaxIndex(1);
+      setTrackedProjectSamples([]);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [trackedProject, samples]);
@@ -111,13 +113,14 @@ const MapHeader = () => {
             <Select
               labelId="demo-simple-select-label"
               id="demo-simple-select"
-              value={trackedProject}
+              value={trackedProject || NoProject}
+              defaultValue={trackedProject || NoProject}
               label="Project to track"
               onChange={(e) => dispatch(trackProject(e.target.value))}
             >
               {selectedProjects.length > 0 && (
-                <MenuItem key={-1} value={null}>
-                  {"No project"}
+                <MenuItem key={-1} value={NoProject}>
+                  <p>{NoProject}</p>
                 </MenuItem>
               )}
               {selectedProjects.map((p) => {
@@ -150,6 +153,10 @@ const MapHeader = () => {
               },
             ]}
             onChange={(e, v) => dispatch(highlighIndex(v))}
+            valueLabelFormat={(v) => {
+              const s = trackedProjectSamples.find((s) => s.index_ === v);
+              return s ? `${v} (${s.datetime})` : v;
+            }}
           ></Slider>
         </Grid>
         <Grid item xs={2}>

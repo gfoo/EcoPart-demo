@@ -1,8 +1,12 @@
 import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { fetchSample } from "../lib/api";
-
+import { trackProject } from "../store/mapFilteringSlice";
+import { selectProjects } from "../store/projectsSlice";
 const SampleView = (props) => {
   const [sample, setSample] = useState(props.sample);
+  const dispatch = useDispatch();
+  const projects = useSelector(selectProjects);
 
   useEffect(() => {
     async function f() {
@@ -12,6 +16,11 @@ const SampleView = (props) => {
     f();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  const trackProjectHandler = (e, project) => {
+    e.preventDefault();
+    dispatch(trackProject(project));
+  };
 
   return (
     <div style={{ width: "300px" }}>
@@ -27,7 +36,17 @@ const SampleView = (props) => {
       {"ecopart_project" in sample && (
         <div>
           <strong>EcoPart Project:</strong> {sample.ecopart_project.name} (
-          {sample.ecopart_project.id})
+          {sample.ecopart_project.id}){" "}
+          <button
+            onClick={(e) =>
+              trackProjectHandler(
+                e,
+                projects.find((p) => p.id === sample.ecopart_project.id)
+              )
+            }
+          >
+            Track project
+          </button>
         </div>
       )}
       {"ecotaxa_project" in sample && (
