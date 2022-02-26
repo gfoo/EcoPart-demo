@@ -13,11 +13,12 @@ jobs:
       - uses: akhileshns/heroku-deploy@v3.12.12
         with:
           heroku_api_key: ${{secrets.HEROKU_API_KEY}}
-          heroku_app_name: "ecopart-demo"
+          heroku_app_name: "ecopart-demo-frontend"
           heroku_email: "gilles.faucherand@gmail.com"
           appdir: "frontend"
           usedocker: "true"
           docker_build_args: "REACT_APP_BACKEND_API_URL"
+          docker_heroku_process_type: "web"
         env:
-          REACT_APP_BACKEND_API_URL: "http://ecopart-demo..herokuapp.com/api"
+          REACT_APP_BACKEND_API_URL: "http://ecopart-demo-backend.herokuapp.com"
           
