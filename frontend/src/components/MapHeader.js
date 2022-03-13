@@ -104,8 +104,8 @@ const MapHeader = () => {
           label="Auto fit samples bounds"
         />
       </Grid>
-      <Grid container spacing={2}>
-        <Grid item xs={4}>
+      <Grid item xs={12} container spacing={2}>
+        <Grid item xs={5}>
           <FormControl fullWidth>
             <InputLabel id="demo-simple-select-label">
               Project to track
