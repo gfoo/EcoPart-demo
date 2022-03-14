@@ -42,7 +42,6 @@ const ProjectsSelector = () => {
         width: 700,
       }}
       disablePortal
-      id="combo-box-demo"
       renderInput={(params) => (
         <>
           <Box sx={{ position: "relative" }}>

@@ -10,7 +10,7 @@ import {
   Select,
   Slider,
 } from "@mui/material";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   FETCH_STATUS_FAILED,
@@ -33,9 +33,11 @@ import {
   selectFetchSamplesError,
   selectFetchSamplesStatus,
   selectSamples,
+  selectSamplesByProjectId,
+  selectSamplesByProjectIdMaxIndex,
 } from "../store/samplesSlice";
 
-const NoProject = " ";
+const NoProject = "";
 
 const MapHeader = () => {
   const dispatch = useDispatch();
@@ -46,24 +48,13 @@ const MapHeader = () => {
   const viewTrack = useSelector(selectViewTrack);
   const selectedProjects = useSelector(selectSelectedProjects);
   const trackedProject = useSelector(selectTrackedProject);
-  const [trackedProjectSamples, setTrackedProjectSamples] = useState([]);
-  const [trackedProjectMaxIndex, setTrackedProjectMaxIndex] = useState(1);
   const highlightedIndex = useSelector(selectHighlightedIndex);
-
-  useEffect(() => {
-    dispatch(highlighIndex(0));
-    if (trackedProject && samples.length > 0) {
-      const pSamples = samples.filter(
-        (s) => s.project_id === trackedProject.id
-      );
-      setTrackedProjectSamples(pSamples);
-      setTrackedProjectMaxIndex(Math.max(...pSamples.map((s) => s.index_)));
-    } else {
-      setTrackedProjectMaxIndex(1);
-      setTrackedProjectSamples([]);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [trackedProject, samples]);
+  const trackedProjectSamples = useSelector((state) =>
+    selectSamplesByProjectId(state, trackedProject?.id)
+  );
+  const trackedProjectMaxIndex = useSelector((state) =>
+    selectSamplesByProjectIdMaxIndex(state, trackedProject?.id)
+  );
 
   useEffect(() => {
     if (
@@ -107,25 +98,22 @@ const MapHeader = () => {
       <Grid item xs={12} container spacing={2}>
         <Grid item xs={5}>
           <FormControl fullWidth>
-            <InputLabel id="demo-simple-select-label">
-              Project to track
-            </InputLabel>
+            <InputLabel id="select-label">Project to track</InputLabel>
             <Select
-              labelId="demo-simple-select-label"
-              id="demo-simple-select"
+              labelId="select-label"
               value={trackedProject || NoProject}
               defaultValue={trackedProject || NoProject}
               label="Project to track"
               onChange={(e) => dispatch(trackProject(e.target.value))}
             >
               {selectedProjects.length > 0 && (
-                <MenuItem key={-1} value={NoProject}>
+                <MenuItem key={NoProject} value={NoProject}>
                   <p>{NoProject}</p>
                 </MenuItem>
               )}
               {selectedProjects.map((p) => {
                 return (
-                  <MenuItem key={p.id} value={p}>
+                  <MenuItem key={p.id + p.name} value={p}>
                     {p.name} ({p.id})
                   </MenuItem>
                 );

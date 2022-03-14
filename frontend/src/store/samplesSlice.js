@@ -60,5 +60,12 @@ export default samplesSlice.reducer;
 export const selectSamples = (state) => state.samples.samples;
 export const selectSamplesByProjectId = (state, projectId) =>
   state.samples.samples.filter((s) => s.project_id === projectId);
+export const selectSamplesByProjectIdMaxIndex = (state, projectId) => {
+  const samples = selectSamplesByProjectId(state, projectId);
+  if (!samples || samples.length <= 0) {
+    return 1;
+  }
+  return Math.max(...samples.map((s) => s.index_));
+};
 export const selectFetchSamplesStatus = (state) => state.samples.status;
 export const selectFetchSamplesError = (state) => state.samples.error;

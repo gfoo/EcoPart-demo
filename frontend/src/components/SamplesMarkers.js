@@ -47,7 +47,7 @@ const SamplesMarkers = ({ project }) => {
         .sort((s1, s2) => s1.index_ <= s2.index_)
         .map((s, index, samplesSorted) => {
           return (
-            <Fragment key={s.id}>
+            <Fragment key={s.id + "_" + s.index_}>
               <CircleMarker
                 center={[s.lat, s.lng]}
                 radius={

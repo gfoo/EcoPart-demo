@@ -4,7 +4,7 @@ const initialState = {
   autofitBounds: true,
   viewTrack: false,
   viewTrackIndexes: false,
-  highlightedIndex: 0,
+  highlightedIndex: 1,
   trackedProject: null,
 };
 
