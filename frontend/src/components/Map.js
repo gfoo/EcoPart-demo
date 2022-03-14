@@ -13,7 +13,7 @@ import {
   selectTrackedProject,
 } from "../store/mapFilteringSlice";
 import { selectSelectedProjects } from "../store/projectsSlice";
-import { selectSamplesByProjectId } from "../store/samplesSlice";
+import { selectSamplesAndMaxIndexByProjectId } from "../store/samplesSlice";
 import MapControls from "./MapControls";
 import SamplesMarkers from "./SamplesMarkers";
 
@@ -24,8 +24,8 @@ const Map = () => {
   const selectedProjects = useSelector(selectSelectedProjects);
   const trackedProject = useSelector(selectTrackedProject);
   const highlightedIndex = useSelector(selectHighlightedIndex);
-  const trackedProjectSamples = useSelector((state) =>
-    selectSamplesByProjectId(state, trackedProject?.id)
+  const [trackedProjectSamples] = useSelector((state) =>
+    selectSamplesAndMaxIndexByProjectId(state, trackedProject?.id)
   );
   const [highlightedIndexTime, setHighlightedIndexTime] = useState(null);
 

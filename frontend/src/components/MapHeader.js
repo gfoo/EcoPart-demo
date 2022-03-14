@@ -33,8 +33,7 @@ import {
   selectFetchSamplesError,
   selectFetchSamplesStatus,
   selectSamples,
-  selectSamplesByProjectId,
-  selectSamplesByProjectIdMaxIndex,
+  selectSamplesAndMaxIndexByProjectId,
 } from "../store/samplesSlice";
 
 const NoProject = "";
@@ -49,11 +48,8 @@ const MapHeader = () => {
   const selectedProjects = useSelector(selectSelectedProjects);
   const trackedProject = useSelector(selectTrackedProject);
   const highlightedIndex = useSelector(selectHighlightedIndex);
-  const trackedProjectSamples = useSelector((state) =>
-    selectSamplesByProjectId(state, trackedProject?.id)
-  );
-  const trackedProjectMaxIndex = useSelector((state) =>
-    selectSamplesByProjectIdMaxIndex(state, trackedProject?.id)
+  const [trackedProjectSamples, trackedProjectMaxIndex] = useSelector((state) =>
+    selectSamplesAndMaxIndexByProjectId(state, trackedProject?.id)
   );
 
   useEffect(() => {

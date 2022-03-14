@@ -7,7 +7,7 @@ import {
   selectTrackedProject,
   selectViewTrack,
 } from "../store/mapFilteringSlice";
-import { selectSamplesByProjectId } from "../store/samplesSlice";
+import { selectSamplesAndMaxIndexByProjectId } from "../store/samplesSlice";
 import SampleView from "./SampleView";
 
 function markerColor(index, lastIndex, highlightedIndex) {
@@ -34,8 +34,8 @@ function markerRadius(index, lastIndex, highlightedIndex) {
 }
 
 const SamplesMarkers = ({ project }) => {
-  const samples = useSelector((state) =>
-    selectSamplesByProjectId(state, project.id)
+  const [samples] = useSelector((state) =>
+    selectSamplesAndMaxIndexByProjectId(state, project.id)
   );
   const highlightedIndex = useSelector(selectHighlightedIndex);
   const trackedProject = useSelector(selectTrackedProject);
