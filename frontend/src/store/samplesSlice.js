@@ -62,7 +62,10 @@ export const selectSamplesAndMaxIndexByProjectId = (state, projectId) => {
   const samples = state.samples.samples.filter(
     (s) => s.project_id === projectId
   );
-  const maxIndex = Math.max(...samples.map((s) => s.index_)) || 1;
+  const maxIndex =
+    !samples || samples.length <= 0
+      ? 1
+      : Math.max(...samples.map((s) => s.index_));
   return [samples, maxIndex];
 };
 export const selectFetchSamplesStatus = (state) => state.samples.status;
